@@ -2,8 +2,7 @@ from fpdf import FPDF
 import configparser
 
 # Parse the configuration file
-config = configparser.ConfigParser()
-config.read('FW_1238.conf')
+
 
 # Extract relevant information
 # server_url = config.get('server', 'url')
@@ -76,6 +75,50 @@ pdf.cell(0, 10, "2.10. SERVEI ANITVIRUS".ljust(100, '.') + "11", ln=1)
 pdf.cell(0, 10, "2.11. SERVEI DE FILTRATGE WEB".ljust(100, '.') + "11", ln=1)
 pdf.cell(0, 10, "2.12. SERVEI APPLICATION CONTROL".ljust(100, '.') + "11", ln=1)
 pdf.cell(0, 10, "2.13. SERVEI INTRUSION PROTECTION".ljust(100, '.') + "11", ln=1)
+
+# page 3
+
+pdf.add_page()
+
+# Set font style for the title
+pdf.set_font("Arial", "B", 20)
+
+# Set text color to dark grey
+pdf.set_text_color(64, 64, 64)
+
+# Add the title to the page
+pdf.cell(0, 20, "1. Introducció", ln=1)
+
+# Set font style for the section title
+pdf.set_font("Arial", "B", 14)
+
+# Add the section titles and text to the page
+pdf.cell(0, 10, "1.1. Descripció", ln=1)
+pdf.set_font("Arial", "", 12)
+pdf.multi_cell(0, 8, "El present document descriu la configuració realitzada en el dispositiu Fortigate-80D de Fortinet a la empresa TecnoCampus resultat de la substitució de un Firewall perimetral Cisco de l'organització.", 0, "L")
+
+pdf.set_font("Arial", "B", 14)
+pdf.cell(0, 10, "1.2. Objectius", ln=1)
+pdf.set_font("Arial", "", 12)
+pdf.multi_cell(0, 8, "El objectiu d'aquest document és la de formalitzar el traspàs d'informació al equip tècnic responsable del manteniment de les infraestructures instal·lades. Aquesta informació fa referencia al disseny, instal·lació i configuració dels dispositius i sistemes afectats per la implementació.\n La present documentació inclou:", 0, "L")
+
+pdf.set_font("Arial", "", 12)
+pdf.multi_cell(0, 8, " Descripció general de les infraestructures instal·lades.\n Polítiques de filtratge de tràfic.\n Perfils de seguretat.\n Connexions Túnel.\n", 0, "L")
+
+config_version = None
+
+config = configparser.ConfigParser()
+
+with open('FW_1238.conf') as f:
+    for line in f:
+        if line.startswith('#config-version='):
+            config_version = line.strip().split('=')[1]
+            break
+
+
+pdf.cell(40, 10, 'Config Version:', 1)
+pdf.cell(0, 10, config_version, 1)
+pdf.ln()
 
 
 pdf.output("report.pdf")
