@@ -1,8 +1,15 @@
+import os
 from fpdf import FPDF
 import configparser
 import os
 
 # Parse the configuration file
+
+
+config_version = None
+
+config = configparser.ConfigParser()
+config.read('FW_1238.conf')
 
 
 # Extract relevant information
@@ -14,6 +21,9 @@ import os
 
 pdf = FPDF()
 pdf.add_page()
+
+titol_color = '\033[33m'
+
 
 # Add cover page image
 pdf.image("Tecnocampus.png", x=0, y=0, w=100, h=40)
@@ -106,11 +116,9 @@ pdf.multi_cell(0, 8, "El objectiu d'aquest document és la de formalitzar el tra
 pdf.set_font("Arial", "", 12)
 pdf.multi_cell(0, 8, " Descripció general de les infraestructures instal·lades.\n Polítiques de filtratge de tràfic.\n Perfils de seguretat.\n Connexions Túnel.\n", 0, "L")
 
+# page 3
 
-config_version = None
-
-config = configparser.ConfigParser()
-#
+pdf.add_page()
 
 
 pdf.output("report.pdf")
