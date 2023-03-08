@@ -95,7 +95,7 @@ pdf.add_page()
 pdf.set_font("Arial", "B", 20)
 
 # Set text color to dark grey
-pdf.set_text_color(*titol_color)
+pdf.set_text_color(64, 64, 64)
 
 # Add the title to the page
 pdf.cell(0, 20, "1. Introducció", ln=1)
@@ -116,19 +116,9 @@ pdf.multi_cell(0, 8, "El objectiu d'aquest document és la de formalitzar el tra
 pdf.set_font("Arial", "", 12)
 pdf.multi_cell(0, 8, " Descripció general de les infraestructures instal·lades.\n Polítiques de filtratge de tràfic.\n Perfils de seguretat.\n Connexions Túnel.\n", 0, "L")
 
+# page 3
 
-config = configparser.ConfigParser()
-
-with open('FW_1238.conf') as f:
-    for line in f:
-        if line.startswith('#config-version='):
-            config_version = line.strip().split('=')[1]
-            break
-
-
-pdf.cell(40, 10, 'Config Version:', 1)
-pdf.cell(0, 10, config_version, 1)
-pdf.ln()
+pdf.add_page()
 
 
 pdf.output("report.pdf")
