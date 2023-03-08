@@ -1,6 +1,8 @@
 (title)1. Introducció
+
 (title)1.1. Descripció
 El present document descriu la configuració realitzada en el dispositiu Fortigate-80D de Fortinet a la empresa TecnoCampus resultat de la substitució de un Firewall perimetral Cisco de l’organització.
+
 (title)1.2. Objectius
 El objectiu d’aquest document és la de formalitzar el traspàs d’informació al equip tècnic responsable del manteniment de les infraestructures instal·lades. Aquesta informació fa referencia al disseny, instal·lació i configuració dels dispositius i sistemes afectats per la implementació. 
 La present documentació inclou:
@@ -9,20 +11,24 @@ La present documentació inclou:
 •	Perfils de seguretat.
 •	Connexions Túnel.
 NEWPAGE
+
 (title)1.3. Descripció general de les infraestructures
 Actualment la infraestructura te la següent distribució:
 En aquest esquema es pot veure com el firewall disposa actualment de dos connexions a internet (Port1 i Port4) que es connecten a través de diferents routers. 
 La infraestructura disposa de dos xarxes locals, la xarxa de servidors i la xarxa d’estacions de treball.
 NEWPAGE
+
 (title)2. Configuració del Dispositiu
 A continuació es detalla la configuració del disposiut Fortigate-80D.
 (title)2.1. Dispositiu
 TABLE
+
 (title)2.2. Credencials d’accés
 Accés: https://10.132.4.254:8443
 Usuari: admin
 Password: dfAS34
 Restriccions d’accés: xarxes 10.132.4.0/24, 10.132.6.0/24, 218.142.21.231/32
+
 (title)2.3. General
 El dispositiu està configurat en mode NAT, és a dir, es separen vàries xarxes a nivell tres d’enrutament.
 
@@ -36,10 +42,12 @@ El dispositiu instal·lat disposa d’una taula de polítiques de connexió per 
 TABLE
 
 NEWPAGE
+
 (title)2.5. Taula d’enrutament [#config router static]
 S’ha definit 2 default gw per permetre la sortida per les dues sortides a internet de la organització. Per defecte el tràfic sortirà a través del GW 10.132.0.1 (prioritat menor) i en cas de caiguda de la línia es redirigirà el tràfic a través del GW 10.132.7.1.
 TABLE
 S’ha definit una sèrie de Health-checks de ping [config System link-monitor] a través de les interfícies wan per detectar la caiguda de les línies de comunicacions.
+
 (title)2.6. Objectes Adreces del Firewall [#config firewall address]
 El dispositiu actualment te vinculats determinats objectes (noms descriptius) a   adreces IP per tal de facilitar la seva utilització en el sistema.
 TABLE
@@ -73,6 +81,7 @@ A continuació es mostren les polítiques de filtratge definides en el dispositi
 TABLE
 
 NEWPAGE
+
 (title)2.10. Servei Antivirus[#config antivirus profile]
 El servei antivirus perimetral proveeix d’una base de dades automatitzada per assegurar la protecció davant de possible contingut de malware detectat a través de la navegació WEB.
 Actualment el dispositiu te com el perfil d’antivirus activat UTM-AV [edit]que detecta i neteja malware i possibles connexions a xarxes de Botnets.
