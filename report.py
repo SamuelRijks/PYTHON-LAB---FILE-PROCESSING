@@ -120,5 +120,9 @@ pdf.multi_cell(0, 8, " Descripció general de les infraestructures instal·lades
 
 pdf.add_page()
 
+pdf.add_page()
+
+pdf.add_page()
+
 
 pdf.output("report.pdf")
