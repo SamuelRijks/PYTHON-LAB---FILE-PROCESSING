@@ -1,5 +1,6 @@
 from fpdf import FPDF
 import configparser
+import os
 
 # Parse the configuration file
 
@@ -25,7 +26,7 @@ pdf.set_text_color(64, 64, 64)
 pdf.set_xy(0, pdf.h/2 + 10)
 
 
-pdf.cell(0, 0, "Migració de la infraestructura de", ln=1, align="L")
+pdf.cell(0, 0, "Migració de la infraestructura de",  ln=1, align="L")
 pdf.cell(0, pdf.font_size + 5, "seguretat perimetral per a", ln=1, align="L")
 
 
@@ -105,20 +106,11 @@ pdf.multi_cell(0, 8, "El objectiu d'aquest document és la de formalitzar el tra
 pdf.set_font("Arial", "", 12)
 pdf.multi_cell(0, 8, " Descripció general de les infraestructures instal·lades.\n Polítiques de filtratge de tràfic.\n Perfils de seguretat.\n Connexions Túnel.\n", 0, "L")
 
+
 config_version = None
 
 config = configparser.ConfigParser()
-
-with open('FW_1238.conf') as f:
-    for line in f:
-        if line.startswith('#config-version='):
-            config_version = line.strip().split('=')[1]
-            break
-
-
-pdf.cell(40, 10, 'Config Version:', 1)
-pdf.cell(0, 10, config_version, 1)
-pdf.ln()
+#
 
 
 pdf.output("report.pdf")
