@@ -1,13 +1,16 @@
 from fpdf import FPDF
 import configparser
 import os
+import PyPDF2
+
 
 # Parse the configuration file
 
 dictionary = {
     'yellow': (255, 153, 0),
     'black': (64, 64, 64),
-    'titlefontsize': 16
+    'titlefontsize': 16,
+    'antivirus': "#config antivirus profile[default]"
 }
 
 config_version = None
@@ -38,18 +41,29 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 pdf.set_draw_color(*dictionary['yellow'])
                 # draw vertical line at x=10 with margin of 10
                 pdf.line(10, 10, 10, pdf.h - 10)
-
             elif line.startswith('(portada)'):
                 pdf.set_font("Helvetica",  size=26)
                 pdf.set_xy(15, 130)
                 # write the text using multi_cell()
                 pdf.multi_cell(0, 5, line[9:], align='L')
+                pdf.cell(0, 10, '')
             elif line.startswith('DISCLAIMER'):
                 with open('disclaimer.txt', 'r') as file:
-                    pdf.set_xy(15, 180)
-                    pdf.set_font("Helvetica",  size=8)
+                    pdf.set_xy(15, 235)
+                    pdf.set_font("Arial", size=9, style="B")
                     disclaimer_text = file.read()
+                    line_height = 1
                     pdf.multi_cell(0, 10, disclaimer_text)
+            elif "ANTIVIRUS" in line:
+                value = config.get('config_antivirus_profile', 'edit')
+                pdf.cell(0, 10, value)
+            elif "WEBFILTER" in line:
+                value = config.get('config webfilter profile', 'edit')
+                pdf.cell(0, 10, value)
+            elif "APP" in line:
+                value = config.get('config application list', 'edit')
+                pdf.cell(0, 10, value)
+
             elif line.startswith('TABLE'):
                 pdf.set_font("Arial", size=12)  # set font size to 12
                 pdf.set_text_color(64, 64, 64)

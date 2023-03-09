@@ -87,21 +87,21 @@ TABLE
 
 NEWPAGE
 
-(title)2.10. Servei Antivirus[#config antivirus profile]
+(title)2.10. Servei Antivirus
 El servei antivirus perimetral proveeix d'una base de dades automatitzada per assegurar la protecció davant de possible contingut de malware detectat a través de la navegació WEB.
-Actualment el dispositiu te com el perfil d'antivirus activat UTM-AV [edit]que detecta i neteja malware i possibles connexions a xarxes de Botnets.
+Actualment el dispositiu te com el perfil d'antivirus activat ANTIVIRUS que detecta i neteja malware i possibles connexions a xarxes de Botnets.
 
-(title)2.11. Servei de Filtrage Web[#config webfilter profile]
+(title)2.11. Servei de Filtrage Web
 El servei de filtratge de web, proveeix d'un servei de  filtratge de contingut web a través dels protocols de navegació. 
-Actualment en el dispositiu s'ha definit el perfil UTM-WF [edit] que actualment únicament genera logs de tot el tràfic de navegació web.
+Actualment en el dispositiu s'ha definit el perfil WEBFILTER que actualment únicament genera logs de tot el tràfic de navegació web.
 
-(title)2.12. Servei Application control[#config application list]
+(title)2.12. Servei Application control
 
 El servei de Application Control realitza un filtratge a nivell d'aplicació per tal de bloquejar  o filtrar determinades comunicacions d'aplicacions. 
-En el dispositiu s'ha activat el perfil UTM-APP[edit] i s'ha configurat per a generar logs de totes les aplicacions utilitzades i bloqueja totes les connexions d'aplicacions típiques de BotNets.
+En el dispositiu s'ha activat el perfil APP i s'ha configurat per a generar logs de totes les aplicacions utilitzades i bloqueja totes les connexions d'aplicacions típiques de BotNets.
 
-(title)2.13. Servei Intrusion Protection [#config ips sensor]
+(title)2.13. Servei Intrusion Protection 
 El Servei de Intrusion Protection permet detectar possibles atacs de xarxa contra la infraestructura de la organització.
-En el dispositiu s'ha activa el perfil UTM-IPS [edit]en les polítiques de navegació web i s'han activat el comportament per defecte (bloqueig en cas necessari o monitorzació) de les signatures de tipus client[set location], de criticitat "critical" [set severity] i "high" [set severity] que afectin a serveis de sistemes operatius Windows, Linux i MacOS[set os].
+En el dispositiu s'ha activa el perfil IPS en les polítiques de navegació web i s'han activat el comportament per defecte (bloqueig en cas necessari o monitorzació) de les signatures de tipus IPSLOC, de criticitat "IPSSEV" i "IPSSEV" que afectin a serveis de sistemes operatius IPSOS.
 
 
