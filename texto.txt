@@ -1,3 +1,7 @@
+IMAGEPORTADA
+(portada)Migració de la infraestructura de seguretat perimetral per a 
+(portada)TecnoCampus
+NEWPAGE
 (title)1. Introducció
 
 (title)1.1. Descripció
@@ -6,10 +10,10 @@ El present document descriu la configuració realitzada en el dispositiu Fortiga
 (title)1.2. Objectius
 El objectiu d’aquest document és la de formalitzar el traspàs d’informació al equip tècnic responsable del manteniment de les infraestructures instal·lades. Aquesta informació fa referencia al disseny, instal·lació i configuració dels dispositius i sistemes afectats per la implementació. 
 La present documentació inclou:
-•	Descripció general de les infraestructures instal·lades.
-•	Polítiques de filtratge de tràfic.
-•	Perfils de seguretat.
-•	Connexions Túnel.
+-	Descripció general de les infraestructures instal·lades.
+-	Polítiques de filtratge de tràfic.
+-	Perfils de seguretat.
+-	Connexions Túnel.
 NEWPAGE
 
 (title)1.3. Descripció general de les infraestructures
