@@ -16,7 +16,7 @@ config = configparser.ConfigParser()
 config.read('FW_1238.conf')
 
 pdf = FPDF(orientation='P', unit='mm', format='A4')
-pdf.add_font('Arial', '', r'C:\Windows\Fonts\arial.ttf', subset=True, uni=True)
+pdf.add_font('Calibri', '', r'C:\Windows\Fonts\Calibri.ttf')
 
 pdf.add_page()
 
@@ -24,7 +24,6 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
     for i, line in enumerate(f, start=1):
         try:
             if line.startswith('(title)'):
-                pdf.set_font
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow
                 pdf.set_text_color(*dictionary['yellow'])
@@ -33,7 +32,12 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
             elif line.startswith('NEWPAGE'):
                 pdf.add_page()
             elif line.startswith('IMAGEPORTADA'):
-                pdf.image('Tecnocampus.png', x=100, y=10, w=100)
+                pdf.image('Tecnocampus.png', x=130, y=40, w=70)
+            elif line.startswith('(portada)'):
+                pdf.set_font("Helvetica",  size=26)
+                pdf.set_xy(10, 130)
+                # write the text using multi_cell()
+                pdf.multi_cell(0, 5, line[9:], align='L')
 
             elif line.startswith('TABLE'):
                 pdf.set_font("Arial", size=12)  # set font size to 12
