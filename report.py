@@ -33,12 +33,23 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 pdf.add_page()
             elif line.startswith('IMAGEPORTADA'):
                 pdf.image('Tecnocampus.png', x=130, y=40, w=70)
+                pdf.set_line_width(3)  # set line width to 3
+                # set draw color to yellow (255, 255, 0)
+                pdf.set_draw_color(*dictionary['yellow'])
+                # draw vertical line at x=10 with margin of 10
+                pdf.line(10, 10, 10, pdf.h - 10)
+
             elif line.startswith('(portada)'):
                 pdf.set_font("Helvetica",  size=26)
-                pdf.set_xy(10, 130)
+                pdf.set_xy(15, 130)
                 # write the text using multi_cell()
                 pdf.multi_cell(0, 5, line[9:], align='L')
-
+            elif line.startswith('DISCLAIMER'):
+                with open('disclaimer.txt', 'r') as file:
+                    pdf.set_xy(15, 180)
+                    pdf.set_font("Helvetica",  size=8)
+                    disclaimer_text = file.read()
+                    pdf.multi_cell(0, 10, disclaimer_text)
             elif line.startswith('TABLE'):
                 pdf.set_font("Arial", size=12)  # set font size to 12
                 pdf.set_text_color(64, 64, 64)
