@@ -129,6 +129,6 @@ En el dispositiu s'ha activat el perfil (APP) i s'ha configurat per a generar lo
 
 (title)2.13. Servei Intrusion Protection 
 El Servei de Intrusion Protection permet detectar possibles atacs de xarxa contra la infraestructura de la organització.
-En el dispositiu s'ha activa el perfil (IPS) en les polítiques de navegació web i s'han activat el comportament per defecte (bloqueig en cas necessari o monitorzació) de les signatures de tipus IPSLOC, de criticitat "IPSSEV" i "IPSSEV" que afectin a serveis de sistemes operatius IPSOS.
+En el dispositiu s'ha activa el perfil (IPS) en les polítiques de navegació web i s'han activat el comportament per defecte (bloqueig en cas necessari o monitorzació) de les signatures de tipus IPSLOC, de criticitat "IPSSEV" que afectin a serveis de sistemes operatius IPSOS.
 
 

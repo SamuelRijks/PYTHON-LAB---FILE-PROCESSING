@@ -14,6 +14,20 @@ dictionary = {
     'antivirus': "#config antivirus profile[default]"
 }
 
+search_list = [
+    ("(ANTIVIRUS)", r'set av-profile\s+"(\w+-?\w+)"',
+     r'config firewall policy(.*?)"certificate-inspection"'),
+    ("(WEBFILTER)", r'set webfilter-profile\s+"(\w+-?\w+)"',
+     r'config firewall policy(.*?)"certificate-inspection"'),
+    ("(APP)", r'set application-list\s+"(\w+-?\w+)"',
+     r'config firewall policy(.*?)"certificate-inspection"'),
+    ("(IPS)", r'set ips-sensor\s+"(\w+-?\w+)"',
+     r'config firewall policy(.*?)"certificate-inspection"'),
+    ("IPSLOC", r'set location\s+"(\w+-?\w+)"', r'edit "UTM-IPS"(.*?)end'),
+    ("IPSSEV", r'set severity\s+(\w+)\s+(\w+)', r'edit "UTM-IPS"(.*?)end'),
+    ("IPSOS", r'set os\s+(\w+)\s+(\w+)\s+(\w+)', r'edit "UTM-IPS"(.*?)end'),
+]
+
 
 config_string = ""
 
@@ -25,11 +39,40 @@ pdf = FPDF(orientation='P', unit='mm', format='A4')
 pdf.add_font('Calibri', '', r'C:\Windows\Fonts\Calibri.ttf')
 
 pdf.add_page()
-
 with open('texto.txt', 'r', encoding='utf-8') as f:
     for i, line in enumerate(f, start=1):
+        entrat = False
+        cont = 0
+        array = [None, None, None, None]
+        pdf.set_font("Arial", size=12)
+        pdf.set_text_color(*dictionary['black'])
         try:
-            if line.startswith('(title)'):
+            for keyword, regex, section in search_list:
+                if keyword in line:
+                    match = re.search(section, config_string, re.DOTALL)
+                    if match:
+                        section_string = match.group(1)
+                        match = re.search(regex, section_string)
+                        print(match)
+                        if match:
+                            value = match.group(1)
+                            if keyword == "(IPS)" or keyword == "IPSSEV":
+                                array[cont] = keyword
+                                array[cont+1] = value
+                                cont = cont + 2
+                            elif keyword == "IPSOS":
+                                line = line.replace(array[0], array[1])
+                                line = line.replace(array[2], array[3])
+                                line = line.replace(keyword, value)
+                                pdf.write(5, line)
+                                entrat = True
+                            else:
+                                line = line.replace(keyword, value)
+                                pdf.write(5, line)
+                                entrat = True
+            if entrat:
+                continue
+            elif line.startswith('(title)'):
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow
                 pdf.set_text_color(*dictionary['yellow'])
@@ -57,54 +100,8 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                     disclaimer_text = file.read()
                     line_height = 1
                     pdf.multi_cell(0, 10, disclaimer_text)
-            elif "(ANTIVIRUS)" in line:
-                match = re.search(
-                    r'config firewall policy(.*?)"certificate-inspection"', config_string, re.DOTALL)
-                if match:
-                    section_string = match.group(1)
-                    match = re.search(
-                        r'set av-profile\s+"(\w+-?\w+)"', section_string)
-                    if match:
-                        value = match.group(1)
-                        line = line.replace("(ANTIVIRUS)", value)
-                        pdf.write(5, line)
-            elif "(WEBFILTER)" in line:
-                match = re.search(
-                    r'config firewall policy(.*?)"certificate-inspection"', config_string, re.DOTALL)
-                if match:
-                    section_string = match.group(1)
-                    match = re.search(
-                        r'set webfilter-profile\s+"(\w+-?\w+)"', section_string)
-                    if match:
-                        value = match.group(1)
-                        line = line.replace("(WEBFILTER)", value)
-                        pdf.write(5, line)
-            elif "(APP)" in line:
-                match = re.search(
-                    r'config firewall policy(.*?)"certificate-inspection"', config_string, re.DOTALL)
-                if match:
-                    section_string = match.group(1)
-                    match = re.search(
-                        r'set application-list\s+"(\w+-?\w+)"', section_string)
-                    if match:
-                        value = match.group(1)
-                        line = line.replace("(APP)", value)
-                        pdf.write(5, line)
-            elif "(IPS)" in line:
-                match = re.search(
-                    r'config firewall policy(.*?)"certificate-inspection"', config_string, re.DOTALL)
-                if match:
-                    section_string = match.group(1)
-                    match = re.search(
-                        r'set ips-sensor\s+"(\w+-?\w+)"', section_string)
-                    if match:
-                        value = match.group(1)
-                        line = line.replace("(IPS)", value)
-                        pdf.write(5, line)
-
             elif line.startswith('ENCABEZADO'):
                 pdf.image('Tecnocampus.png', x=160, y=15, w=35)
-
             elif line.startswith('(bold)'):
                 pdf.set_font(
                     "Arial", 'B', size=dictionary['titlefontsize'] + 4)
@@ -120,7 +117,6 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 # write the line to the PDF
                 pdf.write(5, line[7:])  # skip '(title)' prefix
             elif line.startswith('Migració'):
-                # 添加页首的句子
                 pdf.set_font('Arial', 'B', 16)
                 pdf.cell(
                     0, 10, 'Migració de la infraestructura de seguretat perimetral', 0, 1)
