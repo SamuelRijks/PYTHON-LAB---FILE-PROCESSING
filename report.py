@@ -66,7 +66,8 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 if match:
                     section_string = match.group(1)
                     match = re.search(
-                        r'edit "(\w+)"\n\s+set inspection-mode', section_string)
+                        r'edit\s+"(\w+-?\w+)"\n\s+set inspection-mode', section_string)
+
                     if match:
                         value = match.group(1)
                         print(value)
