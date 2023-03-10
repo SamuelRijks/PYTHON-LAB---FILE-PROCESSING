@@ -64,7 +64,6 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                     section_string = match.group(1)
                     match = re.search(
                         r'set av-profile\s+"(\w+-?\w+)"', section_string)
-                    print(section_string)
                     if match:
                         value = match.group(1)
                         line = line.replace("(ANTIVIRUS)", value)
@@ -80,6 +79,29 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                         value = match.group(1)
                         line = line.replace("(WEBFILTER)", value)
                         pdf.write(5, line)
+            elif "(APP)" in line:
+                match = re.search(
+                    r'config firewall policy(.*?)"certificate-inspection"', config_string, re.DOTALL)
+                if match:
+                    section_string = match.group(1)
+                    match = re.search(
+                        r'set application-list\s+"(\w+-?\w+)"', section_string)
+                    if match:
+                        value = match.group(1)
+                        line = line.replace("(APP)", value)
+                        pdf.write(5, line)
+            elif "(IPS)" in line:
+                match = re.search(
+                    r'config firewall policy(.*?)"certificate-inspection"', config_string, re.DOTALL)
+                if match:
+                    section_string = match.group(1)
+                    match = re.search(
+                        r'set ips-sensor\s+"(\w+-?\w+)"', section_string)
+                    if match:
+                        value = match.group(1)
+                        line = line.replace("(IPS)", value)
+                        pdf.write(5, line)
+
             elif line.startswith('ENCABEZADO'):
                 pdf.image('Tecnocampus.png', x=160, y=15, w=35)
 
