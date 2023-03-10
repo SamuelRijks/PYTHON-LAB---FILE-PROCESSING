@@ -116,7 +116,7 @@ NEWPAGE
 
 (title)2.10. Servei Antivirus
 El servei antivirus perimetral proveeix d'una base de dades automatitzada per assegurar la protecció davant de possible contingut de malware detectat a través de la navegació WEB.
-Actualment el dispositiu te com el perfil d'antivirus activat ANTIVIRUS que detecta i neteja malware i possibles connexions a xarxes de Botnets.
+Actualment el dispositiu te com el perfil d'antivirus activat (ANTIVIRUS) que detecta i neteja malware i possibles connexions a xarxes de Botnets.
 
 (title)2.11. Servei de Filtrage Web
 El servei de filtratge de web, proveeix d'un servei de  filtratge de contingut web a través dels protocols de navegació. 

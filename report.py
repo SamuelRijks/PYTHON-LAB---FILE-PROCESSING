@@ -2,6 +2,7 @@ from fpdf import FPDF
 import configparser
 import os
 import PyPDF2
+import regex as re
 
 
 # Parse the configuration file
@@ -13,10 +14,12 @@ dictionary = {
     'antivirus': "#config antivirus profile[default]"
 }
 
-config_version = None
 
-config = configparser.ConfigParser()
-config.read('FW_1238.conf')
+config_string = ""
+
+with open('FW_1238 .conf', 'r') as f:
+    for line in f:
+        config_string += line
 
 pdf = FPDF(orientation='P', unit='mm', format='A4')
 pdf.add_font('Calibri', '', r'C:\Windows\Fonts\Calibri.ttf')
@@ -54,15 +57,24 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                     disclaimer_text = file.read()
                     line_height = 1
                     pdf.multi_cell(0, 10, disclaimer_text)
-            elif "ANTIVIRUS" in line:
-                value = config.get('config_antivirus_profile', 'edit')
-                pdf.cell(0, 10, value)
-            elif "WEBFILTER" in line:
-                value = config.get('config webfilter profile', 'edit')
-                pdf.cell(0, 10, value)
-            elif "APP" in line:
-                value = config.get('config application list', 'edit')
-                pdf.cell(0, 10, value)
+            elif "(ANTIVIRUS)" in line:
+                # Use regex to find the section
+                match = re.search(
+                    r'config antivirus profile(.*?)proxy', config_string, re.DOTALL)
+
+                # Extract the matched section or print an error message if not found
+                if match:
+                    section_string = match.group(1)
+                    match = re.search(
+                        r'edit "(\w+)"\n\s+set inspection-mode', section_string)
+                    if match:
+                        value = match.group(1)
+                        print(value)
+                    else:
+                        print("Value not found")
+                else:
+                    print("Section not found")
+
             elif line.startswith('ENCABEZADO'):
                 pdf.image('Tecnocampus.png', x=160, y=15, w=35)
 
