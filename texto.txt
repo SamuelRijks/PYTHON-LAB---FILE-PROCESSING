@@ -120,7 +120,7 @@ Actualment el dispositiu te com el perfil d'antivirus activat (ANTIVIRUS) que de
 
 (title)2.11. Servei de Filtrage Web
 El servei de filtratge de web, proveeix d'un servei de  filtratge de contingut web a través dels protocols de navegació. 
-Actualment en el dispositiu s'ha definit el perfil WEBFILTER que actualment únicament genera logs de tot el tràfic de navegació web.
+Actualment en el dispositiu s'ha definit el perfil (WEBFILTER) que actualment únicament genera logs de tot el tràfic de navegació web.
 
 (title)2.12. Servei Application control
 
