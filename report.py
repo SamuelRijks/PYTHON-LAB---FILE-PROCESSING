@@ -63,6 +63,28 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
             elif "APP" in line:
                 value = config.get('config application list', 'edit')
                 pdf.cell(0, 10, value)
+            elif line.startswith('ENCABEZADO'):
+                pdf.image('Tecnocampus.png', x=160, y=15, w=35)
+
+            elif line.startswith('(bold)'):
+                pdf.set_font(
+                    "Arial", 'B', size=dictionary['titlefontsize'] + 4)
+                # set color to yellow
+                pdf.set_text_color(*dictionary['black'])
+                # write the line to the PDF
+                pdf.write(5, line[6:])  # skip '(title)' prefix
+            elif line.startswith('(bold1)'):
+                pdf.set_font(
+                    "Arial", 'B', size=dictionary['titlefontsize'])
+                # set color to yellow
+                pdf.set_text_color(*dictionary['black'])
+                # write the line to the PDF
+                pdf.write(5, line[7:])  # skip '(title)' prefix
+            elif line.startswith('Migració'):
+                # 添加页首的句子
+                pdf.set_font('Arial', 'B', 16)
+                pdf.cell(
+                    0, 10, 'Migració de la infraestructura de seguretat perimetral', 0, 1)
 
             elif line.startswith('TABLE'):
                 pdf.set_font("Arial", size=12)  # set font size to 12
