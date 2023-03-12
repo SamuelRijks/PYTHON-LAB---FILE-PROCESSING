@@ -71,7 +71,7 @@ DNS:
 
 (title)2.4. Interfícies [#config system interface]
 El dispositiu instal·lat disposa d'una taula de polítiques de connexió per tal de definir el comportament del mateix per cada una de les connexions tractades.
-TABLE
+BBBB
 
 NEWPAGE
 

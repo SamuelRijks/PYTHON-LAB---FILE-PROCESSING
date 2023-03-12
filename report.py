@@ -26,6 +26,10 @@ search_list = [
     ("IPSLOC", r'set location\s+"(\w+-?\w+)"', r'edit "UTM-IPS"(.*?)end'),
     ("IPSSEV", r'set severity\s+(\w+)\s+(\w+)', r'edit "UTM-IPS"(.*?)end'),
     ("IPSOS", r'set os\s+(\w+)\s+(\w+)\s+(\w+)', r'edit "UTM-IPS"(.*?)end'),
+    ("TABLE",  r'config-version=FG\d{3}[A-Z]-([\d.]+)-([\w-]+)-(\d{6}):',
+     r'config-version=FG\d{3}[A-Z]-([\d.]+)-([\w-]+)-(\d{6}):'),
+    ("INTERFACE", r'config system interface(.*?"modem")', r'edit "([^"]+)"',
+     r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
 ]
 
 
@@ -46,17 +50,82 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
         array = [None, None, None, None]
         pdf.set_font("Arial", size=12)
         pdf.set_text_color(*dictionary['black'])
+        col_width, row_height, margin = 60, 6, 10
+
+        def create_table(rows, cols, data):
+            # Set header background color
+            pdf.set_fill_color(255, 255, 0)
+
+            # Calculate cell width and height
+            cell_width = pdf.w / cols
+            cell_height = pdf.font_size * 2
+
+            right_margin = 10
+
+            # Print table header
+            for col in range(cols):
+                pdf.cell(cell_width, cell_height,
+                         f'Header {col+1}', border=1, fill=True, align='C')
+
+            for row in range(rows):
+                for col in range(cols):
+                    pdf.cell(cell_width, cell_height, f'Row {row+1}, Col {col+1}', border=1, align='C',
+                             ln=row == rows-1 and col == cols-1,  # Set line break for last cell
+                             r=right_margin)  # Set right margin
+
+                pdf.ln(cell_height)
+
+            pdf.ln(cell_height)
+
+        def create_data(word):
+            # crear info
+            match = re.search(search_list[keyword == word].section)
         try:
             for keyword, regex, section in search_list:
                 if keyword in line:
                     match = re.search(section, config_string, re.DOTALL)
                     if match:
-                        section_string = match.group(1)
-                        match = re.search(regex, section_string)
-                        print(match)
+                        if keyword == "TABLE":
+                            value1 = match.group(1)[1:]
+                            match = re.search(regex, config_string)
+                        else:
+                            section_string = match.group(1)
+                            match = re.search(regex, section_string)
                         if match:
                             value = match.group(1)
-                            if keyword == "(IPS)" or keyword == "IPSSEV":
+                            if keyword == "TABLE":
+                                line = line.replace(keyword, "")
+                                version = match.group(1).replace('_', '.')
+                                version = version.replace('0', '', 1)
+                                version = version[:2] + '0' + "." + version[2:]
+
+                                build_match = re.search(
+                                    r'build(\d+)', match.group(2))
+                                build = 'build' + \
+                                    build_match.group(1) if build_match else ""
+
+                                date = match.group(3)
+                                value1 = f"v{version},{build} ({date})"
+                                # Define the table as a nested dictionary
+                                table_data = {1: {1: 'Marca-Model', 2: f'FortiGate {value}'},
+                                              2: {1: 'OS/Firmware', 2: value1},
+                                              3: {1: 'S/N', 2: ''}}
+
+                                # Set table border style
+                                # Black border color
+                                pdf.set_draw_color(0, 0, 0)
+                                # Thin border line width
+                                pdf.set_line_width(0.3)
+
+                                # Loop over the rows and columns and add the cell contents to the PDF
+                                for row_num, row_data in table_data.items():
+                                    for col_num, cell_data in row_data.items():
+                                        # Black text color
+                                        pdf.set_text_color(0, 0, 0)
+                                        pdf.cell(col_width, row_height,
+                                                 cell_data, border=1)
+                                    pdf.ln(row_height)
+                            elif keyword == "(IPS)" or keyword == "IPSSEV":
                                 array[cont] = keyword
                                 array[cont+1] = value
                                 cont = cont + 2
@@ -72,6 +141,8 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                                 entrat = True
             if entrat:
                 continue
+            elif line.startswith('BBBB'):
+                create_table(5, 4)
             elif line.startswith('(title)'):
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow
@@ -120,24 +191,6 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 pdf.set_font('Arial', 'B', 16)
                 pdf.cell(
                     0, 10, 'Migració de la infraestructura de seguretat perimetral', 0, 1)
-
-            elif line.startswith('TABLE'):
-                pdf.set_font("Arial", size=12)  # set font size to 12
-                pdf.set_text_color(64, 64, 64)
-                col_width = 40
-                row_height = 6
-                margin = 10
-                # Create table header
-                pdf.cell(col_width, row_height * 2, 'Header 1', border=1)
-                pdf.cell(col_width, row_height * 2, 'Header 2', border=1)
-                pdf.cell(col_width, row_height * 2, 'Header 3', border=1)
-                pdf.ln(row_height * 2)
-                # Create table rows
-                for row in range(1, 4):
-                    for col in range(1, 4):
-                        pdf.cell(col_width, row_height,
-                                 f'Row {row}, Col {col}', border=1)
-                    pdf.ln(row_height)
             else:
                 # set font size to 12
                 pdf.set_font("Arial", size=12)
