@@ -14,6 +14,11 @@ dictionary = {
     'antivirus': "#config antivirus profile[default]"
 }
 
+dicc = {
+    "INTERFACE": (5, 4, r'config system interface(.*?"modem"',
+                  r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"')
+}
+
 search_list = [
     ("(ANTIVIRUS)", r'set av-profile\s+"(\w+-?\w+)"',
      r'config firewall policy(.*?)"certificate-inspection"'),
@@ -28,8 +33,7 @@ search_list = [
     ("IPSOS", r'set os\s+(\w+)\s+(\w+)\s+(\w+)', r'edit "UTM-IPS"(.*?)end'),
     ("TABLE",  r'config-version=FG\d{3}[A-Z]-([\d.]+)-([\w-]+)-(\d{6}):',
      r'config-version=FG\d{3}[A-Z]-([\d.]+)-([\w-]+)-(\d{6}):'),
-    ("INTERFACE", 5, 4, r'config system interface(.*?"modem"',
-     r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
+
 ]
 
 
@@ -82,29 +86,29 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
         def create_data(word):
             # crear info
             values = {}
-            match = re.search(search_list[word][2], config_string, re.DOTALL)
+            match = re.search(dicc[word][2], config_string, re.DOTALL)
             if match:
-                for i in range(3, len(search_list[word])):
+                for i in range(3, len(dicc[word])):
                     section_string = match.group(1)
-                    values[i] = re.search(search_list[word][i], section_string)
+                    values[i] = re.search(dicc[word][i], section_string)
                     table_data = {}
-                    for word in range(len(search_list)):
-                        if search_list[word][0] > 0:
+                    for word in range(len(dicc)):
+                        if dicc[word][0] > 0:
                             table_data[word+1] = {}
-                            for row in range(1, search_list[word][0]+1):
+                            for row in range(1, dicc[word][0]+1):
                                 table_data[word+1][row] = {}
-                                for col in range(1, search_list[word][1]+1):
+                                for col in range(1, dicc[word][1]+1):
                                     if col == 1:
                                         table_data[word +
-                                                   1][row][col] = search_list[word][col-1]
+                                                   1][row][col] = dicc[word][col-1]
                                     else:
                                         try:
                                             table_data[word +
                                                        1][row][col] = values[word][col-2]
                                         except:
                                             table_data[word+1][row][col] = ''
-                create_table(search_list[word][0],
-                             search_list[word][1], table_data)
+                create_table(dicc[word][0],
+                             dicc[word][1], table_data)
 
         try:
             for keyword, regex, section in search_list:
@@ -168,7 +172,7 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
             if entrat:
                 continue
             elif line.startswith('BBBB'):
-                create_table(5, 4)
+                create_data("INTERFACE")
             elif line.startswith('(title)'):
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow
