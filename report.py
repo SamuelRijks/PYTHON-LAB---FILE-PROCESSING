@@ -28,8 +28,8 @@ search_list = [
     ("IPSOS", r'set os\s+(\w+)\s+(\w+)\s+(\w+)', r'edit "UTM-IPS"(.*?)end'),
     ("TABLE",  r'config-version=FG\d{3}[A-Z]-([\d.]+)-([\w-]+)-(\d{6}):',
      r'config-version=FG\d{3}[A-Z]-([\d.]+)-([\w-]+)-(\d{6}):'),
-    ("INTERFACE", r'config system interface(.*?"modem")', r'edit "([^"]+)"',
-     r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
+    ("INTERFACE", 5, 4, r'config system interface(.*?"modem"',
+     r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
 ]
 
 
@@ -65,11 +65,13 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
             # Print table header
             for col in range(cols):
                 pdf.cell(cell_width, cell_height,
-                         f'Header {col+1}', border=1, fill=True, align='C')
+                         f'{data[1][col+1]}', border=1, fill=True, align='C')
+
+            pdf.ln(cell_height)
 
             for row in range(rows):
                 for col in range(cols):
-                    pdf.cell(cell_width, cell_height, f'Row {row+1}, Col {col+1}', border=1, align='C',
+                    pdf.cell(cell_width, cell_height, f'{data[row+1][col+1]}', border=1, align='C',
                              ln=row == rows-1 and col == cols-1,  # Set line break for last cell
                              r=right_margin)  # Set right margin
 
@@ -79,7 +81,31 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
 
         def create_data(word):
             # crear info
-            match = re.search(search_list[keyword == word].section)
+            values = {}
+            match = re.search(search_list[word][2], config_string, re.DOTALL)
+            if match:
+                for i in range(3, len(search_list[word])):
+                    section_string = match.group(1)
+                    values[i] = re.search(search_list[word][i], section_string)
+                    table_data = {}
+                    for word in range(len(search_list)):
+                        if search_list[word][0] > 0:
+                            table_data[word+1] = {}
+                            for row in range(1, search_list[word][0]+1):
+                                table_data[word+1][row] = {}
+                                for col in range(1, search_list[word][1]+1):
+                                    if col == 1:
+                                        table_data[word +
+                                                   1][row][col] = search_list[word][col-1]
+                                    else:
+                                        try:
+                                            table_data[word +
+                                                       1][row][col] = values[word][col-2]
+                                        except:
+                                            table_data[word+1][row][col] = ''
+                create_table(search_list[word][0],
+                             search_list[word][1], table_data)
+
         try:
             for keyword, regex, section in search_list:
                 if keyword in line:
