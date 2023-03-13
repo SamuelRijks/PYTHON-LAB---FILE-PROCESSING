@@ -15,8 +15,7 @@ dictionary = {
 }
 
 dicc = {
-    "INTERFACE": (5, 4, r'config system interface(.*?"modem"',
-                  r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"')
+    "INTERFACE": (5, 4, r'config system interface(.*?)"modem"', r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"')
 }
 
 search_list = [
@@ -85,28 +84,38 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
 
         def create_data(word):
             # crear info
-            values = {}
+            values = {0: None, 1: None, 2: None, 3: None}
             match = re.search(dicc[word][2], config_string, re.DOTALL)
             if match:
-                for i in range(3, len(dicc[word])):
-                    section_string = match.group(1)
-                    values[i] = re.search(dicc[word][i], section_string)
-                    table_data = {}
+                y = 0
+                for i in range(len(dicc[word])):
+                    if i >= 3:
+                        print(dicc[word][3])
+                        section_string = match.group(1)
+                        match = re.search(dicc[word][i], section_string)
+                        values[y] = match.group(1)
+                        table_data = {}
+                        y = y + 1
+
                     for word in range(len(dicc)):
-                        if dicc[word][0] > 0:
-                            table_data[word+1] = {}
-                            for row in range(1, dicc[word][0]+1):
-                                table_data[word+1][row] = {}
-                                for col in range(1, dicc[word][1]+1):
-                                    if col == 1:
-                                        table_data[word +
-                                                   1][row][col] = dicc[word][col-1]
-                                    else:
-                                        try:
+                        if word in dicc and dicc[word][0] > 0:
+                            # do something
+                            print("VIVA ESPAÑA")
+                            if dicc[word][0] > 0:
+                                table_data[word+1] = {}
+                                for row in range(1, dicc[word][0]+1):
+                                    table_data[word+1][row] = {}
+                                    for col in range(1, dicc[word][1]+1):
+                                        if col == 1:
                                             table_data[word +
-                                                       1][row][col] = values[word][col-2]
-                                        except:
-                                            table_data[word+1][row][col] = ''
+                                                       1][row][col] = dicc[word][col-1]
+                                        else:
+                                            try:
+                                                table_data[word +
+                                                           1][row][col] = values[word][col-2]
+                                            except:
+                                                table_data[word +
+                                                           1][row][col] = ''
                 create_table(dicc[word][0],
                              dicc[word][1], table_data)
 
