@@ -83,7 +83,7 @@ SYSTEM
 
 (title)2.6. Objectes Adreces del Firewall [#config firewall address]
 El dispositiu actualment te vinculats determinats objectes (noms descriptius) a   adreces IP per tal de facilitar la seva utilització en el sistema.
-TABLE
+CONFIGFIRE
 
 NEWPAGE
 

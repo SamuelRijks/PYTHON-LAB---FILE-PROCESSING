@@ -17,7 +17,9 @@ dictionary = {
 dicc = {
     "INTERFACE": (5, 4, r'config system interface(.*?)"modem"', r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
     "ROUTER": (2, 4, r'config router static(.*?)end', r'set gateway (\d+\.\d+\.\d+\.\d+)',  r'set device "([^"]+)"', r'set priority (\d+)'),
-    "SYSTEM": (2, 6, r'config system link-monitor(.*?)end', r'set server "(.*?)"', r'set gateway-ip\s+(.+)', r'set srcintf "(?P<srcintf>\w+)"', r'set interval\s+(\d+)', r'set failtime\s+(\S+)', r'set recoverytime (\S+)')
+    "SYSTEM": (2, 6, r'config system link-monitor(.*?)end', r'set server "(.*?)"', r'set gateway-ip\s+(.+)', r'set srcintf "(?P<srcintf>\w+)"', r'set interval\s+(\d+)', r'set failtime\s+(\S+)', r'set recoverytime (\S+)'),
+    "CONFIGFIRE": (8, 3, r'edit "inside_wrk"(.*?)end', r'edit\s+"([^"]+)"', r'set subnet (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)', r'set type (\S+)\n\s+set start-ip (\S+)')
+    "CUSTOM": (85, 5)
 }
 
 search_list = [
@@ -72,9 +74,12 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
 
             for i in range(cols):
                 for j in range(rows+1):
-                    if j < len(data) and i < len(data[j]):
-                        pdf.cell(cell_width, cell_height,
-                                 str(data[j][i]), border=1)
+                    if data is not None:
+                        if j < len(data) and i < len(data[j]):
+                            pdf.cell(cell_width, cell_height,
+                                     str(data[j][i]), border=1)
+                        else:
+                            pdf.cell(cell_width, cell_height, "", border=1)
                     else:
                         pdf.cell(cell_width, cell_height, "", border=1)
                 pdf.ln()
@@ -164,6 +169,8 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 create_data("ROUTER")
             elif line.startswith("SYSTEM"):
                 create_data("SYSTEM")
+            elif line.startswith("CONFIGFIRE"):
+                create_data("CONFIGFIRE")
             elif line.startswith('(title)'):
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow
