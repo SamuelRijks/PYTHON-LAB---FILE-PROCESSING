@@ -91,9 +91,10 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 y = 0
                 for i in range(len(dicc[word])):
                     if i >= 3:
-                        section_string = match.group(1)
+                        if i == 3:
+                            section_string = match.group(1)
                         match = re.search(dicc[palabra][i], section_string)
-                        print(dicc[palabra][i])
+                        print(match)
                         values[y] = match.group(1)
                         table_data = {}
                         y = y + 1
