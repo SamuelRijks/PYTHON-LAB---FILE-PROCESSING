@@ -65,22 +65,20 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
 
             right_margin = 10
 
-            # Print table header
-            for col in range(cols):
-                pdf.cell(cell_width, cell_height,
-                         f'{data[1][col+1]}', border=1, fill=True, align='C')
+            pdf.cell(cell_width, cell_height, 'Header1', border=1)
+            pdf.cell(cell_width, cell_height, 'Header2', border=1)
+            pdf.cell(cell_width, cell_height, 'Header3', border=1)
+            pdf.cell(cell_width, cell_height, 'Header4', border=1)
+            pdf.ln()
 
-            pdf.ln(cell_height)
-
-            for row in range(rows):
-                for col in range(cols):
-                    pdf.cell(cell_width, cell_height, f'{data[row+1][col+1]}', border=1, align='C',
-                             ln=row == rows-1 and col == cols-1,  # Set line break for last cell
-                             r=right_margin)  # Set right margin
-
-                pdf.ln(cell_height)
-
-            pdf.ln(cell_height)
+            for i in range(cols):
+                for j in range(rows):
+                    if j < len(data) and i < len(data[j]):
+                        pdf.cell(cell_width, cell_height,
+                                 str(data[j][i]), border=1)
+                    else:
+                        pdf.cell(cell_width, cell_height, "", border=1)
+                pdf.ln()
 
         def create_data(word):
             # crear info
@@ -95,28 +93,10 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                             section_string = match.group(1)
                         values[y] = re.findall(
                             dicc[palabra][i], section_string)
-                        table_data = {}
                         y = y + 1
-                    for word in range(len(dicc)):
-                        if word in dicc and dicc[word][0] > 0:
-                            if dicc[word][0] > 0:
-                                table_data[word+1] = {}
-                                for row in range(1, dicc[word][0]+1):
-                                    table_data[word+1][row] = {}
-                                    for col in range(1, dicc[word][1]+1):
-                                        if col == 1:
-                                            table_data[word +
-                                                       1][row][col] = dicc[word][col-1]
-                                        else:
-                                            try:
-                                                table_data[word +
-                                                           1][row][col] = values[word][col-2]
-                                            except:
-                                                table_data[word +
-                                                           1][row][col] = ''
                 print(values)
                 create_table(dicc[palabra][0],
-                             dicc[palabra][1], table_data)
+                             dicc[palabra][1], values)
 
         try:
             for keyword, regex, section in search_list:
