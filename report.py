@@ -93,16 +93,12 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                     if i >= 3:
                         if i == 3:
                             section_string = match.group(1)
-                        match = re.search(dicc[palabra][i], section_string)
-                        print(match)
-                        values[y] = match.group(1)
+                        values[y] = re.findall(
+                            dicc[palabra][i], section_string)
                         table_data = {}
                         y = y + 1
-
                     for word in range(len(dicc)):
                         if word in dicc and dicc[word][0] > 0:
-                            # do something
-                            print("VIVA ESPAÑA")
                             if dicc[word][0] > 0:
                                 table_data[word+1] = {}
                                 for row in range(1, dicc[word][0]+1):
@@ -118,8 +114,9 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                                             except:
                                                 table_data[word +
                                                            1][row][col] = ''
-                create_table(dicc[word][0],
-                             dicc[word][1], table_data)
+                print(values)
+                create_table(dicc[palabra][0],
+                             dicc[palabra][1], table_data)
 
         try:
             for keyword, regex, section in search_list:
