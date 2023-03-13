@@ -84,15 +84,16 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
 
         def create_data(word):
             # crear info
+            palabra = word
             values = {0: None, 1: None, 2: None, 3: None}
-            match = re.search(dicc[word][2], config_string, re.DOTALL)
+            match = re.search(dicc[palabra][2], config_string, re.DOTALL)
             if match:
                 y = 0
                 for i in range(len(dicc[word])):
                     if i >= 3:
-                        print(dicc[word][3])
                         section_string = match.group(1)
-                        match = re.search(dicc[word][i], section_string)
+                        match = re.search(dicc[palabra][i], section_string)
+                        print(dicc[palabra][i])
                         values[y] = match.group(1)
                         table_data = {}
                         y = y + 1
