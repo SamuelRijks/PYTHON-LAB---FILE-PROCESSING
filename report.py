@@ -15,7 +15,9 @@ dictionary = {
 }
 
 dicc = {
-    "INTERFACE": (5, 4, r'config system interface(.*?)"modem"', r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"')
+    "INTERFACE": (5, 4, r'config system interface(.*?)"modem"', r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
+    "ROUTER": (2, 4, r'config router static(.*?)end', r'set gateway (\d+\.\d+\.\d+\.\d+)',  r'set device "([^"]+)"', r'set priority (\d+)'),
+    "SYSTEM": (2, 6, r'config system link-monitor(.*?)end', r'set server "(.*?)"', r'set gateway-ip\s+(.+)', r'set srcintf "(?P<srcintf>\w+)"', r'set interval\s+(\d+)', r'set failtime\s+(\S+)', r'set recoverytime (\S+)')
 }
 
 search_list = [
@@ -64,15 +66,12 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
             cell_height = pdf.font_size * 2
 
             right_margin = 10
-
-            pdf.cell(cell_width, cell_height, 'Header1', border=1)
-            pdf.cell(cell_width, cell_height, 'Header2', border=1)
-            pdf.cell(cell_width, cell_height, 'Header3', border=1)
-            pdf.cell(cell_width, cell_height, 'Header4', border=1)
+            for i in range(cols):
+                pdf.cell(cell_width, cell_height, f'Header{i+1}', border=1)
             pdf.ln()
 
             for i in range(cols):
-                for j in range(rows):
+                for j in range(rows+1):
                     if j < len(data) and i < len(data[j]):
                         pdf.cell(cell_width, cell_height,
                                  str(data[j][i]), border=1)
@@ -83,7 +82,7 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
         def create_data(word):
             # crear info
             palabra = word
-            values = {0: None, 1: None, 2: None, 3: None}
+            values = {i: None for i in range(dicc[palabra][1])}
             match = re.search(dicc[palabra][2], config_string, re.DOTALL)
             if match:
                 y = 0
@@ -161,6 +160,10 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 continue
             elif line.startswith('BBBB'):
                 create_data("INTERFACE")
+            elif line.startswith('ROUTER'):
+                create_data("ROUTER")
+            elif line.startswith("SYSTEM"):
+                create_data("SYSTEM")
             elif line.startswith('(title)'):
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow

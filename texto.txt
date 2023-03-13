@@ -75,10 +75,11 @@ BBBB
 
 NEWPAGE
 
-(title)2.5. Taula d'enrutament [#config router static]
+(title)2.5. Taula d'enrutament
 S'ha definit 2 default gw per permetre la sortida per les dues sortides a internet de la organització. Per defecte el tràfic sortirà a través del GW 10.132.0.1 (prioritat menor) i en cas de caiguda de la línia es redirigirà el tràfic a través del GW 10.132.7.1.
-TABLE
-S'ha definit una sèrie de Health-checks de ping [config System link-monitor] a través de les interfícies wan per detectar la caiguda de les línies de comunicacions.
+ROUTER
+S'ha definit una sèrie de Health-checks de ping a través de les interfícies wan per detectar la caiguda de les línies de comunicacions.
+SYSTEM
 
 (title)2.6. Objectes Adreces del Firewall [#config firewall address]
 El dispositiu actualment te vinculats determinats objectes (noms descriptius) a   adreces IP per tal de facilitar la seva utilització en el sistema.
