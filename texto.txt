@@ -90,28 +90,20 @@ NEWPAGE
 (title)2.7. Objectes Serveis  [#config firewall service custom]
 El dispositiu configurat disposa de serveis predeterminats per defecte establerts per FortiNet i addicionalment te introduïts serveis personalitzats. 
 Els serveis predeterminats són:
-
+CONFIGSERVICE
 NEWPAGE
-
-TABLE
-
-NEWPAGE
-
-TABLE
-
 Els serveis addicionals són:
-
-TABLE
+ADDSERVEIS
 
 NEWPAGE
 
 (title)2.8. NATs d'entrada (Virtual IPs) [#config firewall vip]
 S'ha definit els següents NATs d'entrada (VIPs en nomenclatura Fortinet)
-TABLE
+FIREVIP
 
 (title)2.9. Polítiques de Firewall [#config firewall policy]
 A continuació es mostren les polítiques de filtratge definides en el dispositiu Fortigate:
-TABLE
+CONFIGPOLICY
 
 NEWPAGE
 

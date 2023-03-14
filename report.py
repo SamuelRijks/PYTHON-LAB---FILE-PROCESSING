@@ -18,8 +18,12 @@ dicc = {
     "INTERFACE": (5, 4, r'config system interface(.*?)"modem"', r'edit "([^"]+)"', r'set alias "([^"]+)"', r'set ip (\d+\.\d+\.\d+\.\d+)', r'set dhcp-relay-ip "(\d+\.\d+\.\d+\.\d+)"'),
     "ROUTER": (2, 4, r'config router static(.*?)end', r'set gateway (\d+\.\d+\.\d+\.\d+)',  r'set device "([^"]+)"', r'set priority (\d+)'),
     "SYSTEM": (2, 6, r'config system link-monitor(.*?)end', r'set server "(.*?)"', r'set gateway-ip\s+(.+)', r'set srcintf "(?P<srcintf>\w+)"', r'set interval\s+(\d+)', r'set failtime\s+(\S+)', r'set recoverytime (\S+)'),
-    "CONFIGFIRE": (8, 3, r'edit "inside_wrk"(.*?)end', r'edit\s+"([^"]+)"', r'set subnet (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)', r'set type (\S+)\n\s+set start-ip (\S+)')
-    "CUSTOM": (85, 5)
+    "CONFIGFIRE": (8, 3, r'edit "inside_wrk"(.*?)end', r'edit\s+"([^"]+)"', r'set subnet (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)', r'set type (\S+)\n\s+set start-ip (\S+)'),
+    "CONFIGSERVICE": (95, 5, r'config firewall service custom(.*?).end', r'edit "([^"]+)"', r'set\s+category\s+"([^"]+)"', r'set tcp-portrange\s+(\S+)', r'set udp-portrange\s+(\S+)', r'set protocol\s+(\S+)'),
+    "ADDSERVEIS": (2, 5, r'edit "8083_TCP"(.*?)end', r'edit "([^"]+)"', r'set tcp-portrange (\d+)', r'set udp-portrange (\d+)'),
+    "FIREVIP": (2, 5, r'config firewall vip(.*?)end', r'edit\s+"([^"]+)"', r'set extip (\d+\.\d+\.\d+\.\d+)', r'set protocol (\d+)'),
+    "CONFIGPOLICY": (9, 13)
+
 }
 
 search_list = [
@@ -63,23 +67,25 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
             # Set header background color
             pdf.set_fill_color(255, 255, 0)
 
+            # Determine the number of rows and columns based on the data
+            rows = len(data)
+            cols = len(data[0])
+
             # Calculate cell width and height
-            cell_width = pdf.w / cols
+            cell_width = (pdf.w-150) / cols
             cell_height = pdf.font_size * 2
 
             right_margin = 10
-            for i in range(cols):
+            for i in range(rows):
                 pdf.cell(cell_width, cell_height, f'Header{i+1}', border=1)
             pdf.ln()
-
+            print(rows)
+            print(cols)
             for i in range(cols):
-                for j in range(rows+1):
-                    if data is not None:
-                        if j < len(data) and i < len(data[j]):
-                            pdf.cell(cell_width, cell_height,
-                                     str(data[j][i]), border=1)
-                        else:
-                            pdf.cell(cell_width, cell_height, "", border=1)
+                for j in range(rows):
+                    if j < len(data) and data[j] is not None and i < len(data[j]):
+                        pdf.cell(cell_width, cell_height,
+                                 str(data[j][i]), border=1)
                     else:
                         pdf.cell(cell_width, cell_height, "", border=1)
                 pdf.ln()
@@ -171,6 +177,8 @@ with open('texto.txt', 'r', encoding='utf-8') as f:
                 create_data("SYSTEM")
             elif line.startswith("CONFIGFIRE"):
                 create_data("CONFIGFIRE")
+            elif line.startswith("CONFIGSERVICE"):
+                create_data("CONFIGSERVICE")
             elif line.startswith('(title)'):
                 pdf.set_font("Arial",  size=dictionary['titlefontsize'])
                 # set color to yellow
