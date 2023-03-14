@@ -22,7 +22,7 @@ dicc = {
     "CONFIGSERVICE": (95, 5, r'config firewall service custom(.*?).end', r'edit "([^"]+)"', r'set\s+category\s+"([^"]+)"', r'set tcp-portrange\s+(\S+)', r'set udp-portrange\s+(\S+)', r'set protocol\s+(\S+)'),
     "ADDSERVEIS": (2, 5, r'edit "8083_TCP"(.*?)end', r'edit "([^"]+)"', r'set tcp-portrange (\d+)', r'set udp-portrange (\d+)'),
     "FIREVIP": (2, 5, r'config firewall vip(.*?)end', r'edit\s+"([^"]+)"', r'set extip (\d+\.\d+\.\d+\.\d+)', r'set protocol (\d+)'),
-    "CONFIGPOLICY": (9, 13)
+    "CONFIGPOLICY": (9, 13, r'config firewall policy(.*?)end', r'set srcintf "([^"]*)"', r'set srcaddr "([^"]*)"', r'set dstaddr "([^"]*)"',  r'set service "([^"]*)"', r'set action "([^"]*)"', r'set av-profile "([^"]*)"', r'set webfilter-profile "([^"]*)"', r'set application-list "([^"]*)"', r'set ips-sensor "([^"]*)"', r'set ssl-ssh-profile "([^"]*)"', r'set logtraffic "([^"]*)"', r'set nat (\d+)'),
 
 }
 
